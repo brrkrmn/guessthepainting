@@ -14,7 +14,14 @@ paintingsRouter.get('/last-id', async (request, response) => {
 })
 
 paintingsRouter.get('/:id', async (request, response) => {
+  const painting = paintings
+    .find(item => item.id === Number(request.params.id))
 
+  if (painting) {
+    response.status(200).json(painting)
+  } else {
+    response.status(404).json({ error: 'No painting found' })
+  }
 })
 
 paintingsRouter.post('/', async (request, response) => {
