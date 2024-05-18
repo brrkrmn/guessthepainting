@@ -1,11 +1,13 @@
-const config = require('./utils/config')
-const express = require('express')
-const app = express()
-const cors = require('cors')
+const config = require('./utils/config');
+const express = require('express');
+const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
-require('express-async-errors')
-const paintingsRouter = require('./controllers/paintings')
+const paintingsRouter = require('./controllers/paintings');
 const middleware = require('./utils/middleware');
+
+require('express-async-errors');
+require('./utils/cronJobs');
 
 mongoose.set('strictQuery', false);
 console.log('Connecting to MONGODB...');
