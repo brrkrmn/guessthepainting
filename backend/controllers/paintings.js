@@ -1,5 +1,8 @@
-const paintingsRouter = require('express').Router()
+require('dotenv').config();
+const paintingsRouter = require('express').Router();
 const paintings = require('../data/paintings');
+const Painting = require('../models/painting');
+const { basicAuth } = require('../utils/middleware');
 
 paintingsRouter.get('/last-id', async (request, response) => {
   const lastActivePainting = paintings
@@ -24,8 +27,19 @@ paintingsRouter.get('/:id', async (request, response) => {
   }
 })
 
-paintingsRouter.post('/', async (request, response) => {
+paintingsRouter.post('/', basicAuth, async (request, response) => {
+  const body = request.body;
+  const totalPaintings = await Painting.find().count();
 
+  const painting = new Painting({
+    _id: totalPaintings + 1,
+    title: body.title,
+    hints: body.hints,
+  })
+
+  const savedPainting = await painting.save()
+
+  response.status(201).json(savedPainting)
 })
 
 module.exports = paintingsRouter
