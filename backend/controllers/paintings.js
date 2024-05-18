@@ -18,10 +18,10 @@ paintingsRouter.get('/last-id', async (request, response) => {
 paintingsRouter.get('/:id', async (request, response) => {
   const painting = await Painting.findById(request.params.id)
 
-  if (painting) {
-    response.status(200).json(painting)
-  } else {
+  if (!painting || painting.isActive === false) {
     response.status(404).json({ error: 'No painting found' })
+  } else {
+    response.status(200).json(painting)
   }
 })
 
