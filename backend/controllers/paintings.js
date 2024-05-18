@@ -1,31 +1,30 @@
 require('dotenv').config();
 const paintingsRouter = require('express').Router();
-const paintings = require('../data/paintings');
 const Painting = require('../models/painting');
 const { basicAuth } = require('../utils/middleware');
 
 paintingsRouter.get('/last-id', async (request, response) => {
-  const lastActivePainting = paintings
-    .sort((a, b) => b.id - a.id)
-    .find(painting => painting.isActive)
+  const activePaintings = await Painting.find({ isActive: true })
 
-  if (lastActivePainting) {
-    response.status(200).json({ lastId: lastActivePainting.id })
-  } else {
+  if (activePaintings.length === 0) {
     response.status(404).json({ error: 'No active painting found' })
   }
+
+  const lastActivePaintingId = activePaintings.sort((a, b) => b.id - a.id)[0].id
+
+  response.status(200).json({ lastId: lastActivePaintingId })
 })
 
-paintingsRouter.get('/:id', async (request, response) => {
-  const painting = paintings
-    .find(item => item.id === Number(request.params.id))
+// paintingsRouter.get('/:id', async (request, response) => {
+//   const painting = paintings
+//     .find(item => item.id === Number(request.params.id))
 
-  if (painting) {
-    response.status(200).json(painting)
-  } else {
-    response.status(404).json({ error: 'No painting found' })
-  }
-})
+//   if (painting) {
+//     response.status(200).json(painting)
+//   } else {
+//     response.status(404).json({ error: 'No painting found' })
+//   }
+// })
 
 paintingsRouter.post('/', basicAuth, async (request, response) => {
   const body = request.body;
