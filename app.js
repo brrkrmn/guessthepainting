@@ -21,11 +21,11 @@ mongoose.connect(config.MONGODB_URI)
     });
 
 app.use(cors())
-app.use(express.static('build'))
 app.use(express.json())
 
 app.use(middleware.requestLogger)
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
 app.use('/api/paintings', paintingsRouter)
 
 app.use(middleware.unknownEndpoint)
