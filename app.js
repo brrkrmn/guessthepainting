@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const paintingsRouter = require('./controllers/paintings');
 const middleware = require('./utils/middleware');
+const fetchArtworks = require('./utils/fetchArtworks');
 
 require('express-async-errors');
 require('./utils/cronJobs');
@@ -15,6 +16,11 @@ console.log('Connecting to MONGODB...');
 mongoose.connect(config.MONGODB_URI)
     .then(result => {
         console.log('Connected to MongoDB')
+        fetchArtworks().then(() => {
+            console.log('Artwork fetching completed')
+        }).catch(error => {
+            console.log('Error during artwork fetching:', error)
+        })
     })
     .catch((error) => {
         console.log('Error connecting to MongoDB: ', error.message)
