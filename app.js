@@ -29,7 +29,7 @@ app.use(middleware.requestLogger);
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 app.use("/api/paintings", paintingsRouter);
-app.use("/api/search/paintings", searchRouter);
+app.use("/api/search", searchRouter);
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
