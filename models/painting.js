@@ -1,19 +1,9 @@
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
-const hintSchema = new mongoose.Schema({
-  image: {
-    type: String,
-    required: true,
-  },
-  text: {
-    type: String,
-  }
-})
-
 const paintingSchema = new mongoose.Schema({
   _id: {
-    type: Number
+    type: Number,
   },
   title: {
     type: String,
@@ -21,20 +11,19 @@ const paintingSchema = new mongoose.Schema({
     unique: true,
   },
   hints: {
-    type: [hintSchema],
+    type: [String],
     validate: {
       validator: function (array) {
-        return array.length === 5;
+        return array.length <= 5;
       },
-      message: 'Hints array must have 5 items'
+      message: (props) => `${props.value.length} exceeds the limit of 5 hints.`,
     },
-    required: true
   },
   isActive: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 paintingSchema.plugin(uniqueValidator)
 paintingSchema.set('toJSON', {
